@@ -1,117 +1,128 @@
-/* Mobile-first approach */
+/* ========================================
+   GLOBAL STYLES — App-wide base styles
+   ======================================== */
 
+/* Container */
 .container {
   width: 100%;
   padding: 0 16px;
   margin: 0 auto;
 }
 
-/* Responsive container width */
 @media (min-width: 576px) {
-  .container {
-    padding: 0 20px;
-  }
+  .container { padding: 0 20px; }
 }
 
 @media (min-width: 768px) {
-  .container {
-    max-width: 750px;
-    padding: 0 20px;
-  }
+  .container { max-width: 800px; padding: 0 24px; }
 }
 
 @media (min-width: 992px) {
-  .container {
-    max-width: 970px;
-    padding: 0 30px;
-  }
+  .container { max-width: 900px; }
 }
 
-@media (min-width: 1200px) {
-  .container {
-    max-width: 1170px;
-  }
-}
-
-/* Base button styles - mobile optimized */
+/* Base button reset */
 button {
-  padding: 12px 16px;
+  padding: 10px 16px;
   border: none;
-  border-radius: 6px;
+  border-radius: 10px;
   cursor: pointer;
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 600;
-  transition: all 0.3s ease;
-  min-height: 44px;
-  min-width: 44px;
+  font-family: inherit;
+  transition: all 0.2s ease;
+  min-height: 40px;
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
 }
 
-button:active {
-  opacity: 0.8;
-  transform: scale(0.98);
-}
-
 button:disabled {
-  opacity: 0.6;
+  opacity: 0.5;
   cursor: not-allowed;
 }
 
-/* Input and textarea styles - mobile optimized */
+/* Base input / textarea reset */
 input, textarea {
-  padding: 12px;
-  border: 1px solid #ddd;
-  border-radius: 6px;
+  padding: 12px 14px;
+  border: 1.5px solid #e8eaf0;
+  border-radius: 10px;
   font-size: 16px;
   font-family: inherit;
   width: 100%;
   -webkit-appearance: none;
   appearance: none;
-  background-color: #fff;
-  transition: border-color 0.3s ease;
+  background-color: #fafbff;
+  color: #1a1a2e;
+  transition: all 0.2s ease;
 }
 
 input:focus, textarea:focus {
   outline: none;
   border-color: #667eea;
-  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.08);
+  background-color: #fff;
 }
 
 textarea {
   resize: vertical;
   min-height: 100px;
+  line-height: 1.5;
 }
 
-/* Message alerts - mobile optimized */
+/* Alerts */
 .error {
-  color: #721c24;
-  padding: 12px 16px;
-  background-color: #f8d7da;
-  border: 1px solid #f5c6cb;
-  border-radius: 6px;
-  margin-bottom: 16px;
-  font-size: 14px;
+  color: #c62828;
+  padding: 10px 14px;
+  background-color: #fff0f0;
+  border: 1px solid #ffd4d4;
+  border-radius: 10px;
+  margin-bottom: 14px;
+  font-size: 13px;
   line-height: 1.5;
 }
 
 .success {
-  color: #155724;
-  padding: 12px 16px;
-  background-color: #d4edda;
+  color: #2e7d32;
+  padding: 10px 14px;
+  background-color: #f0fff4;
   border: 1px solid #c3e6cb;
-  border-radius: 6px;
-  margin-bottom: 16px;
-  font-size: 14px;
+  border-radius: 10px;
+  margin-bottom: 14px;
+  font-size: 13px;
   line-height: 1.5;
 }
 
-/* Loading state */
+/* Loading */
 .loading-state {
   display: flex;
   align-items: center;
   justify-content: center;
   min-height: 100vh;
-  font-size: 16px;
-  color: #666;
+  font-size: 14px;
+  color: #888;
+}
+
+/* Dark mode globals */
+body.dark-mode input,
+body.dark-mode textarea {
+  background-color: #0f0f18;
+  color: #e0e0e0;
+  border-color: #2a2a44;
+}
+
+body.dark-mode input:focus,
+body.dark-mode textarea:focus {
+  background-color: #14142a;
+}
+
+body.dark-mode .error {
+  background-color: #2a1a1a;
+  border-color: #3a2020;
+  color: #ff8080;
+}
+
+body.dark-mode .success {
+  background-color: #1a2a1a;
+  border-color: #203a20;
+  color: #80ff80;
 }

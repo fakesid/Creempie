@@ -4,8 +4,6 @@ import { auth, db } from '../firebase/config';
 import { ThemeContext } from '../App';
 import { signOut } from 'firebase/auth';
 import { doc, getDoc, collection, query, where, onSnapshot, deleteDoc, updateDoc, addDoc, serverTimestamp } from 'firebase/firestore';
-import logo from '../logo/logo.png';
-import { FiEdit2, FiSun, FiMoon, FiCheck, FiX, FiLink, FiCopy, FiShare2, FiTrash2, FiSend, FiMessageCircle, FiLock, FiStar, FiMail, FiInbox, FiHome, FiUser, FiLogOut, FiBell } from 'react-icons/fi';
 import './Dashboard.css';
 
 function Dashboard() {
@@ -28,8 +26,6 @@ function Dashboard() {
     photoURL: ''
   });
   const [savingProfile, setSavingProfile] = useState(false);
-  const [activeTab, setActiveTab] = useState('dashboard');
-  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -94,26 +90,9 @@ function Dashboard() {
   };
 
   const copyToClipboard = () => {
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(profileLink).catch(() => {
-        fallbackCopy(profileLink);
-      });
-    } else {
-      fallbackCopy(profileLink);
-    }
+    navigator.clipboard.writeText(profileLink);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
-  };
-
-  const fallbackCopy = (text) => {
-    const textarea = document.createElement('textarea');
-    textarea.value = text;
-    textarea.style.position = 'fixed';
-    textarea.style.opacity = '0';
-    document.body.appendChild(textarea);
-    textarea.select();
-    document.execCommand('copy');
-    document.body.removeChild(textarea);
   };
 
   const deleteMessage = async (messageId) => {
@@ -302,72 +281,13 @@ function Dashboard() {
       <header className="dashboard-header">
         <div className="container">
           <div className="header-content">
-            <div className="header-brand">
-              <img src={logo} alt="Creempie" className="header-logo" />
-              <span className="header-app-name">Creempie</span>
+            <div>
+              <h1>Dashboard</h1>
+              <p>Welcome, {user?.displayName || 'User'}!</p>
             </div>
-            <div className="header-menu-wrapper">
-              <button
-                className="btn-notification"
-                aria-label="Notifications"
-                onClick={() => document.querySelector('.messages-section')?.scrollIntoView({ behavior: 'smooth' })}
-              >
-                <FiBell />
-                {messages.length > 0 && <span className="notif-badge">{messages.length}</span>}
-              </button>
-              <button 
-                onClick={() => setMenuOpen(!menuOpen)} 
-                className="btn-menu-toggle"
-                aria-label="Menu"
-              >
-                <span className={`menu-icon ${menuOpen ? 'open' : ''}`}>
-                  <span></span>
-                  <span></span>
-                  <span></span>
-                </span>
-              </button>
-
-              {menuOpen && (
-                <>
-                  <div className="menu-backdrop" onClick={() => setMenuOpen(false)} />
-                  <div className="dropdown-menu">
-                    <button onClick={() => { startEditProfile(); setMenuOpen(false); }} className="menu-item">
-                      <span className="menu-item-icon"><FiEdit2 /></span>
-                      <span>Edit Profile</span>
-                    </button>
-                    <div className="menu-divider" />
-                    <div className="menu-section-label">Theme</div>
-                    <div className="menu-theme-colors">
-                      {['purple', 'blue', 'green', 'red', 'orange'].map(color => (
-                        <button
-                          key={color}
-                          className={`menu-color-btn ${themeContext?.theme === color ? 'active' : ''}`}
-                          onClick={() => changeTheme(color)}
-                          title={color.charAt(0).toUpperCase() + color.slice(1)}
-                          style={{
-                            backgroundColor: color === 'purple' ? '#8B5CF6' :
-                                            color === 'blue' ? '#3B82F6' :
-                                            color === 'green' ? '#10B981' :
-                                            color === 'red' ? '#EF4444' : '#F97316'
-                          }}
-                        >
-                          {themeContext?.theme === color && <FiCheck size={12} />}
-                        </button>
-                      ))}
-                    </div>
-                    <button onClick={() => { toggleDarkMode(); setMenuOpen(false); }} className="menu-item">
-                      <span className="menu-item-icon">{themeContext?.isDarkMode ? <FiSun /> : <FiMoon />}</span>
-                      <span>{themeContext?.isDarkMode ? 'Light Mode' : 'Dark Mode'}</span>
-                    </button>
-                    <div className="menu-divider" />
-                    <button onClick={() => { handleLogout(); setMenuOpen(false); }} className="menu-item menu-item-danger">
-                      <span className="menu-item-icon">🚪</span>
-                      <span>Logout</span>
-                    </button>
-                  </div>
-                </>
-              )}
-            </div>
+            <button onClick={handleLogout} className="btn-logout">
+              Logout
+            </button>
           </div>
         </div>
       </header>
@@ -376,7 +296,7 @@ function Dashboard() {
         {/* Edit Profile Section */}
         {editMode ? (
           <section className="edit-profile-section">
-            <h2><FiEdit2 style={{marginRight: 8}} /> Edit Profile</h2>
+            <h2>✏️ Edit Profile</h2>
             <form onSubmit={saveProfile} className="edit-form">
               <div className="form-group">
                 <label>Display Name *</label>
@@ -421,20 +341,20 @@ function Dashboard() {
                   className="btn-save"
                   disabled={savingProfile}
                 >
-                  {savingProfile ? 'Saving...' : <><FiCheck style={{marginRight: 4}} /> Save Profile</>}
+                  {savingProfile ? 'Saving...' : '✓ Save Profile'}
                 </button>
                 <button 
                   type="button" 
                   className="btn-cancel"
                   onClick={cancelEdit}
                 >
-                  <FiX style={{marginRight: 4}} /> Cancel
+                  ✕ Cancel
                 </button>
               </div>
             </form>
           </section>
         ) : (
-          <section className="profile-card-section">
+          <section className="profile-info-section">
             <div className="profile-card">
               <div className="profile-left">
                 {user?.photoURL ? (
@@ -450,30 +370,73 @@ function Dashboard() {
                 {user?.bio && <p className="profile-bio">{user.bio}</p>}
                 <p className="profile-username">@{user?.username || 'username'}</p>
               </div>
-            </div>
-            <div className="link-row">
-              <span className="link-share-icon"><FiLink /></span>
-              <span className="link-text">{profileLink.replace(/^https?:\/\//, '')}</span>
-              <button onClick={copyToClipboard} className="link-inline-btn link-inline-copy">
-                {copied ? <FiCheck /> : <FiCopy />}
-              </button>
-              <button onClick={() => {
-                if (navigator.share) {
-                  navigator.share({ title: `${user?.displayName}'s Profile`, url: profileLink });
-                } else {
-                  copyToClipboard();
-                }
-              }} className="link-inline-btn link-inline-share">
-                <FiShare2 />
+              <button onClick={startEditProfile} className="btn-edit-profile">
+                ✏️ Edit
               </button>
             </div>
           </section>
         )}
 
+        {/* Profile Link Section */}
+        <section className="profile-link-section">
+          <h2>📍 Your Profile Link</h2>
+          <p>Share this link on your bio to let people know about you</p>
+          <div className="link-box">
+            <input
+              type="text"
+              value={profileLink}
+              readOnly
+              className="link-input"
+            />
+            <button onClick={copyToClipboard} className="btn-copy">
+              {copied ? '✓ Copied!' : 'Copy Link'}
+            </button>
+          </div>
+        </section>
+
+        {/* Theme Selector Section */}
+        <section className="theme-section">
+          <h2>🎨 Theme Settings</h2>
+          
+          <div className="theme-selector">
+            <div className="theme-colors">
+              <p className="theme-label">Choose a color theme:</p>
+              <div className="color-buttons">
+                {['purple', 'blue', 'green', 'red', 'orange'].map(color => (
+                  <button
+                    key={color}
+                    className={`color-btn ${themeContext?.theme === color ? 'active' : ''}`}
+                    onClick={() => changeTheme(color)}
+                    title={color.charAt(0).toUpperCase() + color.slice(1)}
+                    style={{
+                      backgroundColor: color === 'purple' ? '#8B5CF6' :
+                                      color === 'blue' ? '#3B82F6' :
+                                      color === 'green' ? '#10B981' :
+                                      color === 'red' ? '#EF4444' : '#F97316'
+                    }}
+                  >
+                    {themeContext?.theme === color && '✓'}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="dark-mode-toggle">
+              <p className="theme-label">Dark Mode:</p>
+              <button
+                className={`toggle-btn ${themeContext?.isDarkMode ? 'enabled' : 'disabled'}`}
+                onClick={toggleDarkMode}
+              >
+                {themeContext?.isDarkMode ? '🌙 On' : '☀️ Off'}
+              </button>
+            </div>
+          </div>
+        </section>
+
         {/* Messages Section */}
         <section className="messages-section">
           <div className="messages-header">
-            <h2><FiInbox style={{marginRight: 8}} /> Your Messages</h2>
+            <h2>📬 Your Messages</h2>
           </div>
 
           {/* Message Type Tabs */}
@@ -482,7 +445,7 @@ function Dashboard() {
               className={`tab-button ${messageFilter === 'all' ? 'active' : ''}`}
               onClick={() => setMessageFilter('all')}
             >
-              <span className="tab-icon"><FiInbox /></span>
+              <span className="tab-icon">📬</span>
               <span className="tab-label">All</span>
               <span className="tab-count">{messages.length}</span>
             </button>
@@ -491,7 +454,7 @@ function Dashboard() {
               className={`tab-button ${messageFilter === 'anonymous' ? 'active' : ''}`}
               onClick={() => setMessageFilter('anonymous')}
             >
-              <span className="tab-icon"><FiLock /></span>
+              <span className="tab-icon">🔒</span>
               <span className="tab-label">Anonymous</span>
               <span className="tab-count">{anonymousCount}</span>
             </button>
@@ -500,7 +463,7 @@ function Dashboard() {
               className={`tab-button ${messageFilter === 'fan' ? 'active' : ''}`}
               onClick={() => setMessageFilter('fan')}
             >
-              <span className="tab-icon"><FiStar /></span>
+              <span className="tab-icon">⭐</span>
               <span className="tab-label">Fan Messages</span>
               <span className="tab-count">{fanCount}</span>
             </button>
@@ -521,10 +484,10 @@ function Dashboard() {
                 >
                   <div className="message-header">
                     <span className="message-from">
-                      {msg.messageType === 'fan' ? <><FiStar style={{marginRight: 4}} /> Fan Message</> : <><FiLock style={{marginRight: 4}} /> Anonymous</>}
+                      {msg.messageType === 'fan' ? '⭐ Fan Message' : '🔒 Anonymous'}
                       {msg.status && msg.status !== 'pending' && (
                         <span className="message-status">
-                          {msg.status === 'accepted' ? <> <FiCheck size={12} /> Accepted</> : <> <FiX size={12} /> Rejected</>}
+                          {msg.status === 'accepted' ? ' ✓ Accepted' : ' ✕ Rejected'}
                         </span>
                       )}
                     </span>
@@ -533,7 +496,7 @@ function Dashboard() {
                       className="btn-delete"
                       title="Delete message"
                     >
-                      <FiTrash2 />
+                      🗑️
                     </button>
                   </div>
                   <p className="message-content">{msg.content}</p>
@@ -546,14 +509,14 @@ function Dashboard() {
                         className="btn-accept"
                         title="Accept this fan message to enable conversation"
                       >
-                        <FiCheck style={{marginRight: 4}} /> Accept & Enable Chat
+                        ✓ Accept & Enable Chat
                       </button>
                       <button
                         onClick={() => rejectFanMessage(msg.id)}
                         className="btn-reject"
                         title="Reject this fan message"
                       >
-                        <FiX style={{marginRight: 4}} /> Reject
+                        ✕ Reject
                       </button>
                     </div>
                   )}
@@ -561,7 +524,7 @@ function Dashboard() {
                   {/* Session Info for Accepted Fan Messages */}
                   {msg.messageType === 'fan' && msg.status === 'accepted' && msg.sessionToken && (
                     <div className="session-info">
-                      <p className="session-label"><FiLink style={{marginRight: 4}} /> Chat Session Enabled</p>
+                      <p className="session-label">🔗 Chat Session Enabled</p>
                       <p className="session-details">
                         Token expires: {new Date(msg.sessionExpiresAt).toLocaleDateString()}
                       </p>
@@ -570,7 +533,7 @@ function Dashboard() {
                         className="btn-chat-holder"
                         title="Open chat for this fan message"
                       >
-                        <FiMessageCircle style={{marginRight: 4}} /> Open Chat
+                        💬 Open Chat
                       </button>
                     </div>
                   )}
@@ -589,13 +552,13 @@ function Dashboard() {
           <section className="chat-section-holder">
             <div className="chat-box-holder">
               <div className="chat-header-holder">
-                <h2><FiMessageCircle style={{marginRight: 8}} /> Chat with Fan</h2>
+                <h2>💬 Chat with Fan</h2>
                 <button 
                   className="btn-close-chat"
                   onClick={() => setActiveChatMessage(null)}
                   title="Close chat"
                 >
-                  <FiX style={{marginRight: 4}} /> Close
+                  ✕ Close
                 </button>
               </div>
 
@@ -648,7 +611,7 @@ function Dashboard() {
                     disabled={sendingChat || !chatInput.trim()}
                     className="btn-send-holder"
                   >
-                    {sendingChat ? '...' : <FiSend />}
+                    {sendingChat ? '...' : '📤'}
                   </button>
                 </div>
                 <div className="chat-counter">{chatInput.length}/300</div>
@@ -657,55 +620,6 @@ function Dashboard() {
           </section>
         )}
       </main>
-
-      {/* Bottom Navigation */}
-      <nav className="bottom-nav">
-        <button
-          className={`bottom-nav-item ${activeTab === 'dashboard' ? 'active' : ''}`}
-          onClick={() => { setActiveTab('dashboard'); window.scrollTo({ top: 0, behavior: 'smooth' }); }}
-        >
-          <FiHome />
-          <span>Dashboard</span>
-        </button>
-        <button
-          className={`bottom-nav-item ${activeTab === 'inbox' ? 'active' : ''}`}
-          onClick={() => {
-            setActiveTab('inbox');
-            document.querySelector('.messages-section')?.scrollIntoView({ behavior: 'smooth' });
-          }}
-        >
-          <FiInbox />
-          {messages.length > 0 && <span className="nav-badge">{messages.length}</span>}
-          <span>Inbox</span>
-        </button>
-        <button
-          className="bottom-nav-item nav-share-btn"
-          onClick={() => {
-            if (navigator.share) {
-              navigator.share({ title: `${user?.displayName}'s Profile`, url: profileLink });
-            } else {
-              copyToClipboard();
-            }
-          }}
-        >
-          <FiShare2 />
-          <span>Share</span>
-        </button>
-        <button
-          className={`bottom-nav-item ${activeTab === 'profile' ? 'active' : ''}`}
-          onClick={() => { setActiveTab('profile'); startEditProfile(); }}
-        >
-          <FiUser />
-          <span>Profile</span>
-        </button>
-        <button
-          className="bottom-nav-item"
-          onClick={handleLogout}
-        >
-          <FiLogOut />
-          <span>Logout</span>
-        </button>
-      </nav>
     </div>
   );
 }
