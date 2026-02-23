@@ -94,12 +94,12 @@
 }
 
 .nav-btn-primary {
-  background: red;
+  background: #1a1a2e;
   color: #fff;
 }
 
 .nav-btn-primary:hover {
-  background: darkred;
+  background: #2d2d44;
   transform: translateY(-1px);
   box-shadow: 0 4px 12px rgba(26, 26, 46, 0.2);
 }
