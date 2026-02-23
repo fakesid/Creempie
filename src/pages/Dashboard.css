@@ -44,10 +44,11 @@
 }
 
 .header-logo {
-  width: 32px;
-  height: 32px;
-  border-radius: 8px;
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
   object-fit: contain;
+  box-shadow: 0 4px 16px rgba(102,126,234,0.18);
 }
 
 .header-app-name {

@@ -47,23 +47,34 @@
 .logo {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 6px;
   cursor: pointer;
   text-decoration: none;
+  transition: transform 0.2s ease;
+}
+
+.logo:hover {
+  transform: scale(1.05);
 }
 
 .logo-img {
-  height: 36px;
-  width: 36px;
+  height: 48px;
+  width: 48px;
   object-fit: contain;
-  border-radius: 8px;
+  border-radius: 10px;
+  transition: all 0.3s ease;
+}
+
+.logo-img:hover {
+  filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.15));
 }
 
 .logo-text {
-  font-size: 20px;
+  font-size: 24px;
   font-weight: 700;
   color: #1a1a2e;
   letter-spacing: -0.3px;
+  transition: color 0.2s ease;
 }
 
 .nav-buttons {

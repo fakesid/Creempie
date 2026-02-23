@@ -21,8 +21,8 @@ function Landing() {
       <nav className={`landing-nav ${isScrolled ? 'scrolled' : ''}`}>
         <div className="nav-container">
           <div className="logo" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
-            <img src={logo} alt="BioLink" className="logo-img" />
-            <span className="logo-text">BioLink</span>
+            <img src={require('../mylogo.png')} alt="Ghostalk" className="logo-img" />
+            <span className="logo-text">Ghostalk</span>
           </div>
           <div className="nav-buttons">
             <button className="nav-btn nav-btn-ghost" onClick={() => navigate('/login')}>
@@ -214,7 +214,7 @@ function Landing() {
             <h2>Ready to connect with your audience?</h2>
             <p>Join creators who are building real connections — for free.</p>
             <button className="btn-cta" onClick={() => navigate('/login')}>
-              Create your BioLink
+              Create your Ghostalk
             </button>
           </div>
         </div>
@@ -224,15 +224,15 @@ function Landing() {
       <footer className="landing-footer">
         <div className="footer-container">
           <div className="footer-brand">
-            <img src={logo} alt="BioLink" className="footer-logo" />
-            <span>BioLink</span>
+            <img src={require('../mylogo.png')} alt="Ghostalk" className="footer-logo" />
+            <span>Ghostalk</span>
           </div>
           <div className="footer-links">
             <a href="#privacy">Privacy</a>
             <a href="#terms">Terms</a>
             <a href="#contact">Contact</a>
           </div>
-          <p className="footer-copy">&copy; 2026 BioLink. All rights reserved.</p>
+          <p className="footer-copy">&copy; 2026 Ghostalk. All rights reserved.</p>
         </div>
       </footer>
     </div>

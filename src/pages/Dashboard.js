@@ -4,7 +4,7 @@ import { auth, db } from '../firebase/config';
 import { ThemeContext } from '../App';
 import { signOut } from 'firebase/auth';
 import { doc, getDoc, collection, query, where, onSnapshot, deleteDoc, updateDoc, addDoc, serverTimestamp } from 'firebase/firestore';
-import logo from '../logo/logo.png';
+import logo from '../mylogo.png';
 import { FiEdit2, FiSun, FiMoon, FiCheck, FiX, FiLink, FiCopy, FiShare2, FiTrash2, FiSend, FiMessageCircle, FiLock, FiStar, FiMail, FiInbox, FiHome, FiUser, FiLogOut, FiBell } from 'react-icons/fi';
 import './Dashboard.css';
 
@@ -303,8 +303,8 @@ function Dashboard() {
         <div className="container">
           <div className="header-content">
             <div className="header-brand">
-              <img src={logo} alt="Creempie" className="header-logo" />
-              <span className="header-app-name">Creempie</span>
+              <img src={logo} alt="Ghostalk" className="header-logo" />
+              <span className="header-app-name">Ghostalk</span>
             </div>
             <div className="header-menu-wrapper">
               <button
