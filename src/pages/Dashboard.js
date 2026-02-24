@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useEffect, useState, useContext, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { auth, db } from '../firebase/config';
 import { ThemeContext } from '../App';
@@ -30,6 +30,30 @@ function Dashboard() {
   const [savingProfile, setSavingProfile] = useState(false);
   const [activeTab, setActiveTab] = useState('dashboard');
   const [menuOpen, setMenuOpen] = useState(false);
+  const [headerHidden, setHeaderHidden] = useState(false);
+  const lastScrollY = useRef(0);
+  const ticking = useRef(false);
+
+  const handleScroll = useCallback(() => {
+    if (!ticking.current) {
+      window.requestAnimationFrame(() => {
+        const currentScrollY = window.scrollY;
+        if (currentScrollY > lastScrollY.current && currentScrollY > 60) {
+          setHeaderHidden(true);
+        } else if (currentScrollY < lastScrollY.current) {
+          setHeaderHidden(false);
+        }
+        lastScrollY.current = currentScrollY;
+        ticking.current = false;
+      });
+      ticking.current = true;
+    }
+  }, []);
+
+  useEffect(() => {
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [handleScroll]);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -299,7 +323,7 @@ function Dashboard() {
   return (
     <div className="dashboard-container">
       {/* Header */}
-      <header className="dashboard-header">
+      <header className={`dashboard-header${headerHidden ? ' header-hidden' : ''}`}>
         <div className="container">
           <div className="header-content">
             <div className="header-brand">
@@ -456,6 +480,7 @@ function Dashboard() {
               <span className="link-text">{profileLink.replace(/^https?:\/\//, '')}</span>
               <button onClick={copyToClipboard} className="link-inline-btn link-inline-copy">
                 {copied ? <FiCheck /> : <FiCopy />}
+                <span>{copied ? 'Copied' : 'Copy'}</span>
               </button>
               <button onClick={() => {
                 if (navigator.share) {
@@ -465,6 +490,7 @@ function Dashboard() {
                 }
               }} className="link-inline-btn link-inline-share">
                 <FiShare2 />
+                <span>Share</span>
               </button>
             </div>
           </section>
@@ -697,13 +723,6 @@ function Dashboard() {
         >
           <FiUser />
           <span>Profile</span>
-        </button>
-        <button
-          className="bottom-nav-item"
-          onClick={handleLogout}
-        >
-          <FiLogOut />
-          <span>Logout</span>
         </button>
       </nav>
     </div>
